@@ -23,5 +23,14 @@ const availableSafes = firebase.firestore().collection('availableSafes')
 
 export const store = {
 
-
+  //Sends connection data to Firestore
+  connectSafe: (connect) => {
+    var strSafeNum = connect.safeNum
+    var connectData = {
+      isConnected: true,
+      totalAmount: 0,
+      username: connect.username
+    }
+    availableSafes.doc(strSafeNum).set(connectData)
+  }
 }
