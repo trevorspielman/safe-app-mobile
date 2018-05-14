@@ -24,6 +24,7 @@ const availableSafes = firebase.firestore().collection('availableSafes')
 export const store = {
   availableSafes: [],
   currentSafe: {},
+  currentSafeId: '',
 
 
   //Sends connection data to Firestore
@@ -39,12 +40,16 @@ export const store = {
       store.currentSafe = availableSafes.doc(strSafeNum).get()
         .then(res => {
           store.currentSafe = res.data()
+          store.currentSafeId = strSafeNum
         })
     }
     else {
       alert("Invalid safe number.")
     }
-  }
+  },
+
+//adds deposit to transaction collection on currentSafe
+
 }
 
 //keeps an eye on changing data, then updates store.availableSafes array with new id.

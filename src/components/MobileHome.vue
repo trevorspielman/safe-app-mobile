@@ -10,6 +10,7 @@
     </div>
     <div v-else>
       <h2>What would you like to do?</h2>
+      <h3>Current Balance: ${{store.currentSafe.totalAmount}}</h3>
       <router-link :to="{name: 'Deposit'}">
         <button class="btn btn-primary">Make a Deposit</button>
       </router-link>
