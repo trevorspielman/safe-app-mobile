@@ -22,6 +22,9 @@ const firestore = firebase.firestore()
 const availableSafes = firebase.firestore().collection('availableSafes')
 
 export const store = {
+  availableSafes: [],
+  currentSafe: {},
+
 
   //Sends connection data to Firestore
   connectSafe: (connect) => {
@@ -31,6 +34,22 @@ export const store = {
       totalAmount: 0,
       username: connect.username
     }
-    availableSafes.doc(strSafeNum).set(connectData)
+    if (store.availableSafes.includes(strSafeNum)) {
+      availableSafes.doc(strSafeNum).set(connectData)
+      store.currentSafe = availableSafes.doc(strSafeNum).get()
+        .then(res => {
+          store.currentSafe = res.data()
+        })
+    }
+    else {
+      alert("Invalid safe number.")
+    }
   }
 }
+
+//keeps an eye on changing data, then updates store.availableSafes array with new id.
+availableSafes.onSnapshot((newSafe) => {
+  newSafe.docs.forEach(safe => {
+    store.availableSafes.push(safe.id)
+  })
+})
