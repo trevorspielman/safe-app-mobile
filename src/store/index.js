@@ -20,11 +20,15 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore()
 //a reference to the availableSafes collection
 const availableSafes = firebase.firestore().collection('availableSafes')
+const transactions = firebase.firestore().collection('transactions')
+const unlockCodes = firebase.firestore().collection('unlockCodes')
+
 
 export const store = {
   availableSafes: [],
   currentSafe: {},
   currentSafeId: '',
+  pendingDeposit: {},
 
 
   //Sends connection data to Firestore
@@ -48,8 +52,17 @@ export const store = {
     }
   },
 
-//adds deposit to transaction collection on currentSafe
-
+  //adds deposit to transaction collection on currentSafe
+  makeDeposit: (deposit) => {
+    var transactionId = deposit.transactionId.toString()
+    transactions.doc(transactionId).set(deposit)
+  },
+  unlockCode: (unlockCode) =>{
+    var transactionComplete = {
+      transactionComplete: false
+    }
+    unlockCodes.doc(unlockCode).set(transactionComplete)
+  }
 }
 
 //keeps an eye on changing data, then updates store.availableSafes array with new id.

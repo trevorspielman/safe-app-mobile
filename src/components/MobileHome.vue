@@ -1,10 +1,12 @@
 <template>
   <div class="mobileHome">
-    <div v-if="store.currentSafe.isConnected == false">
+    <div v-if="!store.currentSafe.isConnected">
       <h2>Please enter your name and safe number:</h2>
       <form action="submit" @submit.prevent="connectSafe">
-        <input type="text" placeholder="Name" v-model="connect.username">
-        <input type="number" placeholder="Safe Number" v-model="connect.safeNum">
+        <label for="name">Name:</label>
+        <input type="text" placeholder="Name" id="name" v-model="connect.username">
+        <label for="safeNumber">Safe Number:</label>
+        <input type="number" placeholder="Safe Number" id="safeNumber" v-model="connect.safeNum">
         <button class="btn btn-success" type="submit">Connect</button>
       </form>
     </div>
@@ -15,8 +17,8 @@
         <button class="btn btn-primary">Make a Deposit</button>
       </router-link>
       <router-link :to="{name: 'Withdraw'}">
-      <button class="btn btn-info">Make a Withdrawal</button>
-    </router-link>
+        <button class="btn btn-info">Make a Withdrawal</button>
+      </router-link>
       <button class="btn btn-danger" @click="logout">Log Out</button>
     </div>
   </div>
