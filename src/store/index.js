@@ -28,6 +28,7 @@ export const store = {
   availableSafes: [],
   currentSafe: {},
   currentSafeId: '',
+  //used to store deposit information until safe is locked again
   pendingDeposit: {},
 
 
@@ -53,10 +54,10 @@ export const store = {
   },
 
   //adds deposit to transaction collection on currentSafe
-  makeDeposit: (deposit) => {
-    var transactionId = deposit.transactionId.toString()
-    transactions.doc(transactionId).set(deposit)
-  },
+  // makeDeposit: (deposit) => {
+  //   var transactionId = deposit.transactionId.toString()
+  //   transactions.doc(transactionId).set(deposit)
+  // },
   unlockCode: (unlockCode) =>{
     var transactionComplete = {
       transactionComplete: false

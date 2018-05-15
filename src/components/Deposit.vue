@@ -43,8 +43,8 @@
     methods: {
       makeDeposit() {
         this.deposit.transactionId = Math.floor(Math.random() * 999999) + 100000
-        store.makeDeposit(this.deposit)
-        //create unlockCode 
+        store.pendingDeposit = this.deposit
+        //create unlockCode for the deposit
         let unlockCode = ((this.deposit.transactionId.toString()) + "-" + (store.currentSafeId.toString()))
         store.unlockCode(unlockCode)
         console.log(this.deposit)
