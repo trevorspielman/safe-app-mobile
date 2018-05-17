@@ -42,7 +42,7 @@
     },
     methods: {
       makeDeposit() {
-        this.deposit.transactionId = Math.floor(Math.random() * 999999) + 100000
+        this.deposit.transactionId = Math.floor(Math.random() * (999999 - 100000)) + 100000
         store.pendingDeposit = this.deposit
         //create unlockCode for the deposit
         let unlockCode = ((this.deposit.transactionId.toString()) + "-" + (store.currentSafeId.toString()))
@@ -53,7 +53,7 @@
         let bills = this.deposit.bills
         let coins = this.deposit.coins
         let checks = this.deposit.checks
-        this.deposit.total = (bills + coins + checks).toFixed(2)
+        this.deposit.total = Number((bills + coins + checks).toFixed(2))
       },
       logout() {
         this.store.currentSafe = { isConnected: false, totalAmount: 0, username: '' }

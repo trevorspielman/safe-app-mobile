@@ -58,12 +58,27 @@ export const store = {
   //   var transactionId = deposit.transactionId.toString()
   //   transactions.doc(transactionId).set(deposit)
   // },
-  unlockCode: (unlockCode) =>{
+  unlockCode: (unlockCode) => {
+    let strUnlockCode = unlockCode.toString()
     var transactionComplete = {
       transactionComplete: false
     }
+    //creates the unlockCode document and sets the transactionComplete to false
     unlockCodes.doc(unlockCode).set(transactionComplete)
-  }
+    //listens to unlockCodes collection and the current unlockCode for changes
+    unlockCodes.doc(unlockCode).onSnapshot((unlocked) => {
+      let tempTransaction = unlockCodes.doc(unlockCode)
+      tempTransaction.get()
+        .then(res => {
+          if (res.data().transactionComplete == true) {
+            let strTransactionId = store.pendingDeposit.transactionId.toString()
+            transactions.doc(strTransactionId).set(store.pendingDeposit)
+            
+          }
+        })
+    })
+  },
+
 }
 
 //keeps an eye on changing data, then updates store.availableSafes array with new id.
@@ -72,3 +87,4 @@ availableSafes.onSnapshot((newSafe) => {
     store.availableSafes.push(safe.id)
   })
 })
+
