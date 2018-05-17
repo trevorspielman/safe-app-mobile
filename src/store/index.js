@@ -35,13 +35,8 @@ export const store = {
   //Sends connection data to Firestore
   connectSafe: (connect) => {
     var strSafeNum = connect.safeNum
-    var connectData = {
-      isConnected: true,
-      totalAmount: 0,
-      username: connect.username
-    }
     if (store.availableSafes.includes(strSafeNum)) {
-      availableSafes.doc(strSafeNum).set(connectData)
+      availableSafes.doc(strSafeNum).update({ isConnected: true, username: connect.username })
       store.currentSafe = availableSafes.doc(strSafeNum).get()
         .then(res => {
           store.currentSafe = res.data()
@@ -52,12 +47,6 @@ export const store = {
       alert("Invalid safe number.")
     }
   },
-
-  //adds deposit to transaction collection on currentSafe
-  // makeDeposit: (deposit) => {
-  //   var transactionId = deposit.transactionId.toString()
-  //   transactions.doc(transactionId).set(deposit)
-  // },
   unlockCode: (unlockCode) => {
     let strUnlockCode = unlockCode.toString()
     var transactionComplete = {
@@ -67,15 +56,8 @@ export const store = {
     unlockCodes.doc(unlockCode).set(transactionComplete)
     //listens to unlockCodes collection and the current unlockCode for changes
     unlockCodes.doc(unlockCode).onSnapshot((unlocked) => {
-      let tempTransaction = unlockCodes.doc(unlockCode)
-      tempTransaction.get()
-        .then(res => {
-          if (res.data().transactionComplete == true) {
-            let strTransactionId = store.pendingDeposit.transactionId.toString()
-            transactions.doc(strTransactionId).set(store.pendingDeposit)
-            
-          }
-        })
+      let strTransactionId = store.pendingDeposit.transactionId.toString()
+      availableSafes.doc(store.currentSafeId).collection("transactions").doc(strTransactionId).set(store.pendingDeposit)
     })
   },
 

@@ -11,7 +11,9 @@
         <input type="number" placeholder="Check Total" id="checks" step=".01" min="0" v-model.number="deposit.checks" @keyup="calculateTotal">
         <button type="submit" class="btn btn-success">Make Deposit</button>
       </form>
-      <button class="btn btn-danger" @click="logout">Cancel</button>
+      <router-link :to="{name: 'MobileHome'}">
+      <button class="btn btn-danger">Cancel</button>
+      </router-link>
       <h2>Total Amount Depositing: ${{this.deposit.total}}</h2>
     </div>
     <div v-else>
@@ -23,11 +25,13 @@
 
 <script>
   import { store } from '../store'
+  import { router } from '../router'
   export default {
     name: 'deposit',
     data() {
       return {
         store,
+        router,
         deposit: {
           transactionId: 0,
           transType: "deposit",
@@ -57,6 +61,12 @@
       },
       logout() {
         this.store.currentSafe = { isConnected: false, totalAmount: 0, username: '' }
+        this.$router.push({name: "MobileHome"})
+      }
+    },
+    computed: {
+      currentSafe() {
+        return this.$store.currentSafe
       }
     },
     watch: {}

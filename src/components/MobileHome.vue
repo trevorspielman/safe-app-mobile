@@ -29,6 +29,8 @@
   import { store } from '../store'
   export default {
     name: 'MobileHome',
+    mounted() {
+    },
     data() {
       return {
         store,
@@ -44,6 +46,11 @@
       },
       logout() {
         this.store.currentSafe = { isConnected: false, totalAmount: 0, username: '' }
+      },
+    },
+    computed: {
+      currentSafe() {
+        return this.$store.currentSafe
       }
     }
   }
