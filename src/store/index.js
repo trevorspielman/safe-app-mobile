@@ -30,6 +30,7 @@ export const store = {
   currentSafeId: '',
   //used to store deposit information until safe is locked again
   pendingDeposit: {},
+  transactionProcessing: false,
 
 
   //Sends connection data to Firestore
@@ -60,6 +61,11 @@ export const store = {
       availableSafes.doc(store.currentSafeId).collection("transactions").doc(strTransactionId).set(store.pendingDeposit)
     })
   },
+  cancelTransaction: (transactionId) => {
+    let unlockCode = transactionId + "-" + store.currentSafeNumber
+    unlockCodes.doc(unlockCode).delete()
+    store.transactionProcessing = false
+  }
 
 }
 
@@ -68,5 +74,10 @@ availableSafes.onSnapshot((newSafe) => {
   newSafe.docs.forEach(safe => {
     store.availableSafes.push(safe.id)
   })
+})
+
+//toggles pendingTransaciton
+unlockCodes.onSnapshot((toggle) => {
+  store.transactionProcessing = !store.transactionProcessing
 })
 

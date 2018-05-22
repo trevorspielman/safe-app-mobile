@@ -1,13 +1,14 @@
 <template>
-    <div class="deposit">
+    <div class="withdraw">
       <h1>What would you like to withdraw?</h1>
     </div>
   </template>
   
   <script>
     import { store } from '../store'
+    import { router } from '../router'
     export default {
-      name: 'deposit',
+      name: 'Withdraw',
       data() {
         return {
           store,

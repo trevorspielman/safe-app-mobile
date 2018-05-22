@@ -1,6 +1,6 @@
 <template>
   <div class="deposit">
-    <div v-if="this.deposit.transactionId == 0">
+    <div v-if="store.transactionProcessing == false">
       <h1>What would you like to deposit?</h1>
       <form action="submit" @submit.prevent="makeDeposit">
         <label for="bills">Bills:</label>
@@ -19,6 +19,7 @@
     <div v-else>
       <h2>Total Deposit: ${{this.deposit.total}}</h2>
       <h2>Safe Unlock Code: {{this.deposit.transactionId}}</h2>
+      <button class="btn btn-danger" @click="cancelTransaction">Cancel</button>
     </div>
   </div>
 </template>
@@ -27,7 +28,7 @@
   import { store } from '../store'
   import { router } from '../router'
   export default {
-    name: 'deposit',
+    name: 'Deposit',
     data() {
       return {
         store,
@@ -46,6 +47,7 @@
     },
     methods: {
       makeDeposit() {
+        // store.transactionProcessing = true
         this.deposit.transactionId = Math.floor(Math.random() * (999999 - 100000)) + 100000
         store.pendingDeposit = this.deposit
         //create unlockCode for the deposit
@@ -58,6 +60,10 @@
         let coins = this.deposit.coins
         let checks = this.deposit.checks
         this.deposit.total = Number((bills + coins + checks).toFixed(2))
+      },
+      cancelTransaction(){
+        this.deposit.transactionId = 0
+        store.cancelTransaction(this.deposit.transactionId)
       },
       logout() {
         this.store.currentSafe = { isConnected: false, totalAmount: 0, username: '' }
