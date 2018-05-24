@@ -1,6 +1,5 @@
 <template>
   <div class="deposit">
-    <div v-if="store.transactionProcessing == false">
       <h1>What would you like to deposit?</h1>
       <form action="submit" @submit.prevent="makeDeposit">
         <label for="bills">Bills:</label>
@@ -15,18 +14,12 @@
         <button class="btn btn-danger">Cancel</button>
       </router-link>
       <h2>Total Amount Depositing: ${{this.deposit.total}}</h2>
-    </div>
-    <div v-else>
-      <h2>Total Deposit: ${{this.deposit.total}}</h2>
-      <h2>Safe Unlock Code: {{this.deposit.transactionId}}</h2>
-      <button class="btn btn-danger" @click="cancelTransaction">Cancel</button>
-    </div>
   </div>
 </template>
 
 <script>
   import { store } from '../store'
-  import { router } from '../router'
+  import router from '../router'
   import  moment  from 'moment'
   export default {
     name: 'Deposit',
@@ -54,6 +47,7 @@
         //create unlockCode for the deposit
         let unlockCode = ((this.deposit.transactionId.toString()) + "-" + (store.currentSafeId.toString()))
         store.unlockCode(unlockCode)
+        this.$router.push({ name: "SafeCode" })
       },
       calculateTotal() {
         let bills = this.deposit.bills

@@ -1,6 +1,5 @@
 <template>
   <div class="withdraw">
-    <div v-if="store.transactionProcessing == false">
       <h1>What would you like to withdraw?</h1>
       <div v-for="transaction in store.safeTransactions">
         <transaction :transaction="transaction"></transaction>
@@ -15,18 +14,12 @@
       <router-link :to="{name: 'MobileHome'}">
         <button class="btn btn-danger">Cancel</button>
       </router-link>
-    </div>
-    <div v-else>
-      <h2>Total Withdraw: ${{store.pendingTransaction.total}}</h2>
-      <h2>Safe Unlock Code: {{store.pendingTransaction.transactionId}}</h2>
-      <button class="btn btn-danger" @click="cancelTransaction">Cancel</button>
-    </div>
   </div>
 </template>
 
 <script>
   import { store } from '../store'
-  import { router } from '../router'
+  import router from '../router'
   import transaction from './Transaction'
   import moment from 'moment'
   export default {
@@ -75,6 +68,7 @@
         //create unlockCode for the withdraw
         let unlockCode = ((this.withdraw.transactionId.toString()) + "-" + (store.currentSafeId.toString()))
         store.unlockCode(unlockCode)
+        this.$router.push({ name: "SafeCode" })
       },
       cancelTransaction() {
         store.cancelTransaction(store.pendingTransaction.transactionId)
