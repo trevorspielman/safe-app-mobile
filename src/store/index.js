@@ -20,7 +20,6 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore()
 //a reference to the availableSafes collection
 const availableSafes = firebase.firestore().collection('availableSafes')
-const transactions = firebase.firestore().collection('transactions')
 const unlockCodes = firebase.firestore().collection('unlockCodes')
 
 
