@@ -12,7 +12,7 @@
         <button type="submit" class="btn btn-success">Make Deposit</button>
       </form>
       <router-link :to="{name: 'MobileHome'}">
-      <button class="btn btn-danger">Cancel</button>
+        <button class="btn btn-danger">Cancel</button>
       </router-link>
       <h2>Total Amount Depositing: ${{this.deposit.total}}</h2>
     </div>
@@ -27,6 +27,7 @@
 <script>
   import { store } from '../store'
   import { router } from '../router'
+  import  moment  from 'moment'
   export default {
     name: 'Deposit',
     data() {
@@ -35,25 +36,24 @@
         router,
         deposit: {
           transactionId: 0,
-          transType: "deposit",
+          transType: "Deposit",
+          createdBy: store.currentSafe.username,
           safeId: store.currentSafeId,
           bills: 0,
           coins: 0,
           checks: 0,
           total: 0,
-          date: Date.now()
+          createdAt: moment().format('dddd, MMM Do YY, h:mm a')
         },
       }
     },
     methods: {
       makeDeposit() {
-        // store.transactionProcessing = true
         this.deposit.transactionId = Math.floor(Math.random() * (999999 - 100000)) + 100000
-        store.pendingDeposit = this.deposit
+        store.pendingTransaction = this.deposit
         //create unlockCode for the deposit
         let unlockCode = ((this.deposit.transactionId.toString()) + "-" + (store.currentSafeId.toString()))
         store.unlockCode(unlockCode)
-        console.log(this.deposit)
       },
       calculateTotal() {
         let bills = this.deposit.bills
@@ -61,13 +61,13 @@
         let checks = this.deposit.checks
         this.deposit.total = Number((bills + coins + checks).toFixed(2))
       },
-      cancelTransaction(){
+      cancelTransaction() {
         this.deposit.transactionId = 0
         store.cancelTransaction(this.deposit.transactionId)
       },
       logout() {
         this.store.currentSafe = { isConnected: false, totalAmount: 0, username: '' }
-        this.$router.push({name: "MobileHome"})
+        this.$router.push({ name: "MobileHome" })
       }
     },
     computed: {

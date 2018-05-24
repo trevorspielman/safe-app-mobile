@@ -29,8 +29,9 @@ export const store = {
   currentSafe: {},
   currentSafeId: '',
   //used to store deposit information until safe is locked again
-  pendingDeposit: {},
+  pendingTransaction: {},
   transactionProcessing: false,
+  safeTransactions: [],
 
 
   //Sends connection data to Firestore
@@ -57,15 +58,44 @@ export const store = {
     unlockCodes.doc(unlockCode).set(transactionComplete)
     //listens to unlockCodes collection and the current unlockCode for changes
     unlockCodes.doc(unlockCode).onSnapshot((unlocked) => {
-      let strTransactionId = store.pendingDeposit.transactionId.toString()
-      availableSafes.doc(store.currentSafeId).collection("transactions").doc(strTransactionId).set(store.pendingDeposit)
+      let strTransactionId = store.pendingTransaction.transactionId.toString()
+      availableSafes.doc(store.currentSafeId).collection("transactions").doc(strTransactionId).set(store.pendingTransaction)
     })
   },
   cancelTransaction: (transactionId) => {
     let unlockCode = transactionId + "-" + store.currentSafeNumber
     unlockCodes.doc(unlockCode).delete()
     store.transactionProcessing = false
-  }
+  },
+  //gets all transactions where the safeID matches
+  getTransactions: () => {
+    availableSafes.onSnapshot((transactionsRef) => {
+      let strSafeId = store.currentSafeId.toString()
+      var tempTransactionRegister = []
+      availableSafes.doc(strSafeId).collection("transactions").where("safeId", "==", strSafeId).get()
+        .then(res => {
+          res.forEach(doc => {
+            if (doc.data().transType == "deposit") {
+              tempTransactionRegister.push(doc.data())
+            }
+          })
+          store.safeTransactions = tempTransactionRegister
+          //calculates total for display as well as updating total on the safe doc.
+          var total = 0
+          for (let i = 0; i < store.safeTransactions.length; i++) {
+            const transaction = store.safeTransactions[i];
+            if (transaction.transType == "withdrawal") {
+              total -= Number(transaction.total)
+            }
+            else {
+              total += Number(transaction.total)
+            }
+            store.currentSafe.totalAmount = total
+            // availableSafes.doc(strSafeId).update({ totalAmount: store.currentSafe.totalAmount })
+          }
+        })
+    })
+  },
 
 }
 
@@ -78,6 +108,7 @@ availableSafes.onSnapshot((newSafe) => {
 
 //toggles pendingTransaciton
 unlockCodes.onSnapshot((toggle) => {
+  //try checking to see if transaction complete is true/false for the push to home
   store.transactionProcessing = !store.transactionProcessing
 })
 
