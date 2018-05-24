@@ -37,7 +37,8 @@
         connect: {
           username: '',
           safeNum: 0
-        }
+        },
+        currentBalance: 0,
       }
     },
     methods: {
@@ -52,6 +53,10 @@
       currentSafe() {
         return this.$store.currentSafe
       }
+    },
+    beforeRouteEnter: (to, from, next) => {
+      store.getTransactions()
+      next()
     }
   }
 </script>

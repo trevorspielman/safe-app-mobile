@@ -90,7 +90,6 @@ export const store = {
               total += Number(transaction.total)
             }
             store.currentSafe.totalAmount = total
-            // availableSafes.doc(strSafeId).update({ totalAmount: store.currentSafe.totalAmount })
           }
         })
     })
@@ -105,12 +104,12 @@ availableSafes.onSnapshot((newSafe) => {
   })
 })
 
-//toggles pendingTransaciton
+//toggles pendingTransaciton to control the movement of the screen from the unlock code to mobile home
 unlockCodes.onSnapshot((toggle) => {
-  //try checking to see if transaction complete is true/false for the push to home
   store.transactionProcessing = !store.transactionProcessing
-  if(!store.transactionProcessing){
-    router.push({name: 'MobileHome'})
+  if (!store.transactionProcessing) {
+    setTimeout(funciton => {
+      router.push({ name: 'MobileHome' })
+    }, 2000)
   }
 })
-
