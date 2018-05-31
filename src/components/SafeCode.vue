@@ -1,8 +1,12 @@
 <template>
-  <div class="safeCode">
-    <h2>Transaction Total: ${{store.pendingTransaction.total}}</h2>
-    <h2>Safe Unlock Code: {{store.pendingTransaction.transactionId}}</h2>
-    <button class="btn btn-danger" @click="cancelTransaction">Cancel</button>
+  <div class="safeCode container">
+    <div class="row">
+      <div class="col-sm-12 safeCode">
+        <h2>Transaction Total: ${{store.pendingTransaction.total}}</h2>
+        <h2>Safe Unlock Code: {{store.pendingTransaction.transactionId}}</h2>
+        <button class="btn btn-block btn-danger" @click="cancelTransaction">Cancel</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,4 +33,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .safeCode {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: center;
+  }
 </style>

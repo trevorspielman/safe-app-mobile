@@ -1,19 +1,21 @@
 <template>
-  <div class="withdraw">
-      <h1>What would you like to withdraw?</h1>
-      <div v-for="transaction in store.safeTransactions">
-        <transaction :transaction="transaction"></transaction>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="transactionWithdraw" :value="transaction.transactionId" @click="addWithdraw(transaction)">
-          <label class="form-check-label" for="transactionWithdraw">
-            Withdraw
-          </label>
+  <div class="withdraw container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1>Safe Transactions</h1>
+        <div>
+          <div class="transactions" v-for="transaction in store.safeTransactions">
+            <transaction :transaction="transaction"></transaction>
+          </div>
+        </div>
+        <div class="mt-4">
+          <button class="btn btn-block btn-primary" @click="makeWithdraw">Withdraw</button>
+          <router-link :to="{name: 'MobileHome'}">
+            <button class="btn btn-danger mt-4">Cancel</button>
+          </router-link>
         </div>
       </div>
-      <button class="btn btn-primary" @click="makeWithdraw">Withdraw</button>
-      <router-link :to="{name: 'MobileHome'}">
-        <button class="btn btn-danger">Cancel</button>
-      </router-link>
+    </div>
   </div>
 </template>
 
@@ -38,7 +40,7 @@
           createdBy: store.currentSafe.username,
           safeId: store.currentSafeId,
           total: 0,
-          createdAt: moment().format('dddd, MMM Do YY, h:mm a')
+          createdAt: moment().format('MMM Do YY, h:mm a')
         }
       }
     },
@@ -85,4 +87,16 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .withdraw {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: center;
+  }
+
+  .transactions {
+    display: flex;
+    justify-items: flex-start;
+  }
 </style>
