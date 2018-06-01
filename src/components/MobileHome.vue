@@ -36,6 +36,7 @@
 
 <script>
   import { store } from '../store'
+  import { QBtn } from 'quasar-framework/dist/quasar.mat.esm'
   export default {
     name: 'MobileHome',
     mounted() {
@@ -61,6 +62,9 @@
       currentSafe() {
         return this.$store.currentSafe
       }
+    },
+    components: {
+      QBtn,
     },
     beforeRouteEnter: (to, from, next) => {
       store.getTransactions()
