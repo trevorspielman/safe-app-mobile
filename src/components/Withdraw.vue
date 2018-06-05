@@ -5,7 +5,18 @@
         <h1>Safe Transactions</h1>
         <div>
           <div class="transactions" v-for="transaction in store.safeTransactions">
-            <transaction :transaction="transaction"></transaction>
+            <div v-if="!transaction.withdrawn">
+              <p>
+                <strong>Date:</strong> {{transaction.createdAt}}</p>
+              <p>
+                <strong>Deposit Total:</strong> ${{transaction.total}}</p>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="transactionWithdraw" :value="transaction.transactionId" @click="addWithdraw(transaction)">
+                <label class="form-check-label" for="transactionWithdraw">
+                  Withdraw
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         <div class="mt-4">
@@ -22,7 +33,6 @@
 <script>
   import { store } from '../store'
   import router from '../router'
-  import transaction from './Transaction'
   import moment from 'moment'
   export default {
     name: 'Withdraw',
@@ -80,7 +90,6 @@
       }
     },
     components: {
-      transaction
     }
   }
 </script>
@@ -96,7 +105,8 @@
   }
 
   .transactions {
-    display: flex;
-    justify-items: flex-start;
+    padding: 10px 10px;
+    border-bottom: 1px solid black;
+    text-align: left;
   }
 </style>

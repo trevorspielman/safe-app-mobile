@@ -59,6 +59,14 @@ export const store = {
     unlockCodes.doc(unlockCode).onSnapshot((unlocked) => {
       let strTransactionId = store.pendingTransaction.transactionId.toString()
       availableSafes.doc(store.currentSafeId).collection("transactions").doc(strTransactionId).set(store.pendingTransaction)
+        .then(res => {
+          store.calcSafeTotal()
+        })
+      if (store.pendingTransaction.removedDeposits) {
+        store.pendingTransaction.removedDeposits.forEach(deposit => {
+          availableSafes.doc(store.currentSafeId).collection("transactions").doc(deposit.toString()).update({ withdrawn: true })
+        })
+      }
     })
   },
   cancelTransaction: (transactionId) => {
@@ -69,31 +77,32 @@ export const store = {
   //gets all transactions where the safeID matches
   getTransactions: () => {
     availableSafes.onSnapshot((transactionsRef) => {
-      let strSafeId = store.currentSafeId.toString()
-      var tempTransactionRegister = []
-      availableSafes.doc(strSafeId).collection("transactions").where("safeId", "==", strSafeId).get()
-        .then(res => {
-          res.forEach(doc => {
-            if (doc.data().transType == "Deposit") {
-              tempTransactionRegister.push(doc.data())
-            }
-          })
-          store.safeTransactions = tempTransactionRegister
-          //calculates total for display as well as updating total on the safe doc.
-          var total = 0
-          for (let i = 0; i < store.safeTransactions.length; i++) {
-            const transaction = store.safeTransactions[i];
-            if (transaction.transType == "Withdrawal") {
-              total -= Number(transaction.total)
-            }
-            else {
-              total += Number(transaction.total)
-            }
-            store.currentSafe.totalAmount = total
-          }
-        })
+      store.calcSafeTotal()
     })
   },
+  calcSafeTotal: () => {
+    let strSafeId = store.currentSafeId.toString()
+    var tempTransactionRegister = []
+    availableSafes.doc(strSafeId).collection("transactions").where("safeId", "==", strSafeId).get()
+      .then(res => {
+        res.forEach(doc => {
+            tempTransactionRegister.push(doc.data())
+        })
+        store.safeTransactions = tempTransactionRegister
+        //calculates total for display as well as updating total on the safe doc.
+        var total = 0
+        for (let i = 0; i < store.safeTransactions.length; i++) {
+          const transaction = store.safeTransactions[i];
+          if (transaction.transType == "Withdrawal") {
+            total -= Number(transaction.total)
+          }
+          else {
+            total += Number(transaction.total)
+          }
+          store.currentSafe.totalAmount = total
+        }
+      })
+  }
 
 }
 

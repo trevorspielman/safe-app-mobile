@@ -25,6 +25,7 @@
     methods: {
       cancelTransaction() {
         store.cancelTransaction(store.pendingTransaction.transactionId)
+        store.pendingTransaction = {}
         this.$router.push({ name: "MobileHome" })
       },
     }

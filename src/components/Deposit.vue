@@ -7,15 +7,15 @@
             <div class="form-group">
               <div class="row">
                 <label for="bills">Bills:</label>
-                <input type="number" id="bills" step="1" min="0" v-model.number="deposit.bills" @keyup="calculateTotal(deposit.bills)" required>
+                <input type="number" id="bills" step="1" min="0" v-model.number="deposit.bills" @keyup="calculateTotal(deposit.bills)">
               </div>
               <div class="row">
                 <label for="coins">Coins:</label>
-                <input type="number" id="coins" step=".01" min="0" v-model.number="deposit.coins" @keyup="calculateTotal(deposit.coins)" required>
+                <input type="number" id="coins" step=".01" min="0" v-model.number="deposit.coins" @keyup="calculateTotal(deposit.coins)">
               </div>
               <div class="row">
                 <label for="checks">Checks:</label>
-                <input type="number" id="checks" step=".01" min="0" v-model.number="deposit.checks" @keyup="calculateTotal(deposit.checks)" required>
+                <input type="number" id="checks" step=".01" min="0" v-model.number="deposit.checks" @keyup="calculateTotal(deposit.checks)">
               </div>
             </div>
             <button type="submit" class="btn btn-block btn-success">Make Deposit</button>
@@ -49,24 +49,30 @@
           coins: false,
           checks: false,
           total: 0,
-          createdAt: moment().format('MMM Do YY, h:mm a')
+          createdAt: moment().format('MMM Do YY, h:mm a'),
+          withdrawn: false
         },
       }
     },
     methods: {
       makeDeposit() {
-        this.deposit.transactionId = Math.floor(Math.random() * (999999 - 100000)) + 100000
-        store.pendingTransaction = this.deposit
-        //create unlockCode for the deposit
-        let unlockCode = ((this.deposit.transactionId.toString()) + "-" + (store.currentSafeId.toString()))
-        store.unlockCode(unlockCode)
-        this.$router.push({ name: "SafeCode" })
+        if (this.deposit.total > 0) {
+          this.deposit.transactionId = Math.floor(Math.random() * (999999 - 100000)) + 100000
+          store.pendingTransaction = this.deposit
+          //create unlockCode for the deposit
+          let unlockCode = ((this.deposit.transactionId.toString()) + "-" + (store.currentSafeId.toString()))
+          store.unlockCode(unlockCode)
+          this.$router.push({ name: "SafeCode" })
+        }
+        else {
+          alert("Invalid Deposit.")
+        }
       },
       calculateTotal(num) {
         let bills = this.deposit.bills
         let coins = this.deposit.coins
         let checks = this.deposit.checks
-        this.deposit.total = Number((bills + coins + checks).toFixed(2))        
+        this.deposit.total = Number((bills + coins + checks).toFixed(2))
       },
       cancelTransaction() {
         this.deposit.transactionId = 0
