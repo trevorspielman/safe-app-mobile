@@ -4,18 +4,16 @@
       <div class="col-sm-12">
         <h1>Safe Transactions</h1>
         <div>
-          <div class="transactions" v-for="transaction in store.safeTransactions">
-            <div v-if="!transaction.withdrawn">
-              <p>
-                <strong>Date:</strong> {{transaction.createdAt}}</p>
-              <p>
-                <strong>Deposit Total:</strong> ${{transaction.total}}</p>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="transactionWithdraw" :value="transaction.transactionId" @click="addWithdraw(transaction)">
-                <label class="form-check-label" for="transactionWithdraw">
-                  Withdraw
-                </label>
-              </div>
+          <div class="transactions" v-for="transaction in store.safeTransactions" v-if="!transaction.withdrawn && transaction.transType == 'Deposit'">
+            <p>
+              <strong>Date:</strong> {{transaction.createdAt}}</p>
+            <p>
+              <strong>Deposit Total:</strong> ${{transaction.total}}</p>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="transactionWithdraw" :value="transaction.transactionId" @click="addWithdraw(transaction)">
+              <label class="form-check-label" for="transactionWithdraw">
+                Withdraw
+              </label>
             </div>
           </div>
         </div>
