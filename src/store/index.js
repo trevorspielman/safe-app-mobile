@@ -29,7 +29,7 @@ export const store = {
   currentSafeId: '',
   //used to store deposit information until safe is locked again
   pendingTransaction: {},
-  transactionProcessing: true,
+  transactionProcessing: false,
   safeTransactions: [],
 
 
@@ -86,7 +86,7 @@ export const store = {
     availableSafes.doc(strSafeId).collection("transactions").where("safeId", "==", strSafeId).get()
       .then(res => {
         res.forEach(doc => {
-            tempTransactionRegister.push(doc.data())
+          tempTransactionRegister.push(doc.data())
         })
         store.safeTransactions = tempTransactionRegister
         //calculates total for display as well as updating total on the safe doc.
@@ -116,9 +116,9 @@ availableSafes.onSnapshot((newSafe) => {
 //toggles pendingTransaciton to control the movement of the screen from the unlock code to mobile home
 unlockCodes.onSnapshot((toggle) => {
   store.transactionProcessing = !store.transactionProcessing
-  if (!store.transactionProcessing) {
-    setTimeout(funciton => {
+  toggle.docChanges().forEach(change => {
+    if (change.type === "removed") {
       router.push({ name: 'MobileHome' })
-    }, 2000)
-  }
+    }
+  })
 })

@@ -4,7 +4,7 @@
       <div class="col-sm-12 safeCode">
         <h2>Transaction Total: ${{store.pendingTransaction.total}}</h2>
         <h2>Safe Unlock Code: {{store.pendingTransaction.transactionId}}</h2>
-        <button class="btn btn-block btn-danger" @click="cancelTransaction">Cancel</button>
+        <button v-if="!store.transactionProcessing" class="btn btn-block btn-danger" @click="cancelTransaction">Cancel</button>
       </div>
     </div>
   </div>
